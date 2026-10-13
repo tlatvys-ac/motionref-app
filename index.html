@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MotionRef — a reference board inside After Effects</title>
+<link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32.png">
+<link rel="icon" type="image/png" sizes="64x64" href="images/favicon.png">
+<link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+<meta name="description" content="MotionRef is a free After Effects panel for reference images, GIFs, and video: drag footage in from the Project panel, then move, resize, rotate, zoom, and pan. Each project keeps its own board.">
+<style>
+    :root {
+        --bg: #1E2024;
+        --surface: #2A2D33;
+        --border: #4A4D54;
+        --text: #DDD;
+        --text-strong: #FFF;
+        --muted: #8A8F98;
+        --accent: #4DA6FF;
+        --gold: #FFC53D;
+    }
+    * { box-sizing: border-box; }
+    body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--text);
+        font-family: -apple-system, "SF Pro Text", "Helvetica Neue", "Segoe UI", sans-serif;
+        line-height: 1.6;
+        -webkit-font-smoothing: antialiased;
+    }
+    .wrap {
+        max-width: 660px;
+        margin: 0 auto;
+        padding: 56px 24px 80px;
+    }
+    .hero {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        gap: 14px;
+        margin-bottom: 44px;
+    }
+    .mark { width: 96px; height: 96px; }
+    h1 {
+        margin: 0;
+        font-size: 22px;
+        font-weight: 700;
+        letter-spacing: 0.3em;
+        color: var(--text-strong);
+    }
+    .tagline { margin: 0; color: var(--muted); font-size: 15px; max-width: 460px; }
+
+    .buttons {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        justify-content: center;
+        margin-top: 10px;
+    }
+    .btn {
+        display: inline-block;
+        background: var(--surface);
+        border: 1px solid var(--accent);
+        border-radius: 6px;
+        color: var(--text-strong);
+        font-size: 14px;
+        font-weight: 700;
+        padding: 10px 22px;
+        text-decoration: none;
+        transition: border-color 120ms, background-color 120ms;
+        white-space: nowrap;
+    }
+    .btn:hover { border-color: #FFF; }
+    .btn:active { background: rgba(77, 166, 255, 0.15); }
+    .btn small { display: block; font-weight: 500; font-size: 11px; color: var(--muted); }
+
+    section { margin-top: 40px; }
+    .divider {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 14px;
+    }
+    .divider::before, .divider::after {
+        content: "";
+        flex: 1;
+        height: 1px;
+        background: var(--border);
+    }
+    .divider span {
+        font-size: 11px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        color: var(--muted);
+    }
+    h3 {
+        margin: 18px 0 6px;
+        font-size: 13px;
+        font-weight: 700;
+        color: var(--text-strong);
+    }
+    ol { margin: 0; padding-left: 22px; }
+    li { margin-bottom: 10px; }
+    li::marker { color: var(--accent); font-weight: 700; }
+    a { color: var(--accent); }
+    .fine { color: var(--muted); font-size: 12px; }
+    code {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 4px;
+        padding: 1px 6px;
+        font-size: 12px;
+    }
+    kbd {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-bottom-width: 2px;
+        border-radius: 4px;
+        padding: 0 6px;
+        font: inherit;
+        font-size: 12px;
+        color: var(--text-strong);
+    }
+    .controls {
+        display: grid;
+        grid-template-columns: auto 1fr;
+        gap: 5px 18px;
+        font-size: 13px;
+        margin-top: 6px;
+    }
+    .controls div:nth-child(odd) { white-space: nowrap; }
+    .formats {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+        font-size: 13px;
+    }
+    .formats > div {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        padding: 12px 14px;
+    }
+    .formats strong { display: block; color: var(--text-strong); margin-bottom: 4px; }
+    .formats p { margin: 0; color: var(--text); }
+    .formats .how { margin-top: 6px; color: var(--muted); font-size: 12px; }
+
+    /* Screenshots break out of the text column, like the other pages. */
+    .shots {
+        display: flex;
+        gap: 16px;
+        align-items: flex-start;
+        flex-wrap: wrap;
+        width: min(1080px, calc(100vw - 48px));
+        margin-left: 50%;
+        transform: translateX(-50%);
+    }
+    .shots figure { margin: 0; flex: 1 1 320px; min-width: 260px; }
+    .shots img {
+        display: block;
+        width: 100%;
+        height: auto;
+        border-radius: 8px;
+        border: 1px solid var(--border);
+        cursor: zoom-in;
+        transition: border-color 120ms;
+    }
+    .shots img:hover { border-color: var(--accent); }
+    .shots figcaption {
+        margin-top: 6px;
+        font-size: 11px;
+        color: var(--muted);
+        text-align: center;
+    }
+    .lightbox {
+        position: fixed;
+        inset: 0;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        background: rgba(10, 11, 13, 0.9);
+        z-index: 100;
+        cursor: zoom-out;
+        padding: 24px;
+    }
+    .lightbox.open { display: flex; }
+    .lightbox img {
+        max-width: 96vw;
+        max-height: 92vh;
+        width: auto;
+        height: auto;
+        border-radius: 8px;
+        border: 1px solid var(--border);
+        box-shadow: 0 12px 48px rgba(0, 0, 0, 0.6);
+    }
+    footer {
+        margin-top: 56px;
+        text-align: center;
+        color: var(--muted);
+        font-size: 12px;
+    }
+    @media (max-width: 620px) {
+        .formats { grid-template-columns: 1fr; }
+    }
+</style>
+</head>
+<body>
+<div class="wrap">
+    <div class="hero">
+        <svg class="mark" viewBox="0 0 64 64" aria-hidden="true">
+            <g transform="rotate(-9 26 26)">
+                <rect x="7" y="12" width="36" height="27" rx="3.5" fill="#5A5E66"/>
+                <path d="M12 34l8-9 6 6 4-4 8 7z" fill="#7A7F88"/>
+            </g>
+            <g transform="rotate(7 37 38)">
+                <rect x="18" y="24" width="38" height="28" rx="3.5" fill="#2A2D33"/>
+                <circle cx="46" cy="32" r="3" fill="#FFC53D"/>
+                <path d="M23 47l9-10 7 7 4-4 9 7z" fill="#4DA6FF" opacity="0.55"/>
+                <rect x="18" y="24" width="38" height="28" rx="1" fill="none" stroke="#4DA6FF" stroke-width="1.6"/>
+                <g fill="#fff" stroke="#4DA6FF" stroke-width="1.2">
+                    <rect x="15.5" y="21.5" width="5" height="5"/><rect x="53.5" y="21.5" width="5" height="5"/>
+                    <rect x="53.5" y="49.5" width="5" height="5"/><rect x="15.5" y="49.5" width="5" height="5"/>
+                </g>
+            </g>
+        </svg>
+        <h1>MOTIONREF</h1>
+        <p class="tagline">A reference board inside After Effects. Drag stills,
+        GIFs, and video in from the Project panel and arrange them next to
+        your comp while you work.</p>
+        <div class="buttons">
+            <a class="btn" id="dl-zxp" href="https://github.com/tlatvys-ac/motionref-app/releases/latest/download/MotionRef_v1.0.0.zxp">
+                Download MotionRef (.zxp)
+                <small>After Effects extension · free · macOS</small>
+            </a>
+        </div>
+    </div>
+
+    <section>
+        <div class="divider"><span>About</span></div>
+        <p>MotionRef is a blank, endless board docked in After Effects. Drop
+        footage on it and it appears at its real size. Move it, scale it,
+        rotate it, stack it, zoom in on details, and pan around. Each project
+        keeps its own board, so your references are waiting the next time you
+        open the .aep. Items link to the original files; nothing is copied
+        into your project.</p>
+    </section>
+
+    <section>
+        <div class="divider"><span>What it looks like</span></div>
+        <div class="shots">
+            <figure>
+                <img src="images/empty.png" alt="The empty MotionRef panel: drop images, GIFs, and videos here" loading="lazy">
+                <figcaption>A new board, ready for footage</figcaption>
+            </figure>
+            <figure>
+                <img src="images/board.png" alt="A MotionRef board with stills, a paused video with a play button, and two items selected inside one transform box" loading="lazy">
+                <figcaption>Stills and a video, two items selected in one transform box</figcaption>
+            </figure>
+        </div>
+    </section>
+
+    <section>
+        <div class="divider"><span>Supported media</span></div>
+        <div class="formats">
+            <div>
+                <strong>Stills</strong>
+                <p>PNG, JPEG, GIF, WebP, BMP, SVG, AVIF</p>
+                <p class="how">Shown as-is. Animated GIFs play and loop on their own.</p>
+            </div>
+            <div>
+                <strong>Video</strong>
+                <p>MP4 and MOV with H.264, MP4 with AV1, WebM (VP8, VP9)</p>
+                <p class="how">Plays as-is. Videos start paused; click ▶ to
+                play. They loop, muted.</p>
+            </div>
+            <div>
+                <strong>Design files</strong>
+                <p>PSD, TIFF, TGA, HEIC, OpenEXR, JPEG 2000, Illustrator, PDF</p>
+                <p class="how">Converted to a preview with macOS's built-in
+                tools the first time they're added.</p>
+            </div>
+            <div>
+                <strong>Pro video</strong>
+                <p>ProRes, HEVC</p>
+                <p class="how">Converted to a playable H.264 preview. Codecs
+                macOS can no longer read, like QuickTime Animation, get a still
+                preview frame rendered by After Effects.</p>
+            </div>
+        </div>
+        <p class="fine">Previews are cached in
+        <code>~/Library/Caches/MotionRef</code> and rebuilt when the source
+        file changes; the original is never touched. Previews don't keep
+        transparency. Image sequences show their first frame. Comps, solids,
+        and audio aren't added.</p>
+    </section>
+
+    <section>
+        <div class="divider"><span>Working with media</span></div>
+        <h3>Adding</h3>
+        <p>Select footage in the Project panel and drag it onto the board.
+        Several items land in rows, in Project panel order, from where you
+        drop them. Right-clicking the board offers <strong>Add Selected from
+        Project</strong> too.</p>
+
+        <h3>Selecting</h3>
+        <div class="controls">
+            <div>Click</div><div>select an item</div>
+            <div><kbd>Shift</kbd> + click</div><div>add or remove an item</div>
+            <div>Drag on empty space</div><div>box-select everything it touches (<kbd>Shift</kbd> adds)</div>
+            <div><kbd>⌘</kbd> <kbd>A</kbd> · <kbd>Esc</kbd></div><div>select all · deselect</div>
+        </div>
+
+        <h3>Moving, resizing, rotating</h3>
+        <div class="controls">
+            <div>Drag an item</div><div>move the selection (<kbd>Shift</kbd> locks to one axis)</div>
+            <div><kbd>←</kbd> <kbd>↑</kbd> <kbd>↓</kbd> <kbd>→</kbd></div><div>nudge (<kbd>Shift</kbd> for 10&nbsp;px)</div>
+            <div>Drag a handle</div><div>resize, keeping the aspect ratio</div>
+            <div>+ <kbd>Shift</kbd> · + <kbd>Option</kbd></div><div>stretch freely · resize from the center</div>
+            <div>Drag outside a corner</div><div>rotate (<kbd>Shift</kbd> snaps to 15°)</div>
+            <div><kbd>]</kbd> · <kbd>[</kbd></div><div>bring to front · send to back</div>
+            <div><kbd>Delete</kbd></div><div>remove from the board</div>
+            <div><kbd>⌘</kbd> <kbd>Z</kbd> · <kbd>⌘</kbd> <kbd>⇧</kbd> <kbd>Z</kbd></div><div>undo · redo</div>
+        </div>
+        <p class="fine">Several selected items share one transform box, so
+        they move, scale, and rotate together.</p>
+
+        <h3>Getting around</h3>
+        <div class="controls">
+            <div>Scroll wheel</div><div>zoom in and out around the cursor</div>
+            <div><kbd>Space</kbd> + drag</div><div>pan (or drag with the middle mouse button)</div>
+            <div><kbd>F</kbd></div><div>fit the selection, or the whole board, in view</div>
+        </div>
+
+        <h3>Right-click menu</h3>
+        <p>Play / Pause, Bring to Front, Send to Back, <strong>Reverse
+        Order</strong> (flips the reading order of the selected items),
+        Reset Size, Reveal in Finder, Delete, Zoom to Fit, and Zoom to
+        100%.</p>
+    </section>
+
+    <section>
+        <div class="divider"><span>Setup</span></div>
+        <ol>
+            <li><strong>Install the extension</strong> — open the
+                <code>.zxp</code> with a ZXP installer
+                (<a href="https://aescripts.com/learn/zxp-installer/">aescripts
+                ZXP Installer</a> is free).</li>
+            <li>Restart After Effects and open
+                <em>Window&nbsp;→&nbsp;Extensions&nbsp;→&nbsp;MotionRef</em>.</li>
+            <li>Click the board once so the keyboard shortcuts reach it.
+                Until then After Effects keeps its own (Space still previews
+                your comp). Zooming and middle-drag panning work either way.</li>
+        </ol>
+        <p class="fine">Boards are saved per project in
+        <code>~/Library/Application Support/MotionRef/boards/</code>. A file
+        that's moved or renamed shows as a "Missing" placeholder until it's
+        back.</p>
+        <p class="fine">The extension is signed with a self-signed
+        certificate — your ZXP installer may show an "unverified publisher"
+        notice. That's expected.</p>
+    </section>
+
+    <section>
+        <div class="divider"><span>Requirements</span></div>
+        <p class="fine">After Effects 2022 or later (developed and tested on
+        AE 2026) on macOS. Previews rely on tools built into macOS, so
+        Windows isn't supported. Everything runs locally — no accounts, no
+        network calls.</p>
+    </section>
+
+    <footer>
+        MotionRef <span id="version">v1.0.0</span> ·
+        <a href="https://github.com/tlatvys-ac/motionref-app/releases">release notes</a> ·
+        made by Thomas Latvys ·
+        see also <a href="https://tlatvys-ac.github.io/anchor-buddy-app/">Anchor Buddy</a>,
+        <a href="https://tlatvys-ac.github.io/transporter-app/">Transporter</a>,
+        and <a href="https://tlatvys-ac.github.io/aedoom-app/">AEDoom</a>
+    </footer>
+
+    <div class="lightbox" id="lightbox" role="dialog" aria-label="Screenshot preview" aria-hidden="true">
+        <img id="lightbox-img" src="" alt="">
+    </div>
+
+    <script>
+    // Click a screenshot to preview it at full size; click anywhere
+    // (or press Escape) to close.
+    (() => {
+        const box = document.getElementById("lightbox");
+        const big = document.getElementById("lightbox-img");
+        document.querySelectorAll(".shots img").forEach((img) => {
+            img.addEventListener("click", () => {
+                big.src = img.src;
+                big.alt = img.alt;
+                box.classList.add("open");
+                box.setAttribute("aria-hidden", "false");
+            });
+        });
+        const close = () => {
+            box.classList.remove("open");
+            box.setAttribute("aria-hidden", "true");
+        };
+        box.addEventListener("click", close);
+        document.addEventListener("keydown", (e) => {
+            if (e.key === "Escape") close();
+        });
+    })();
+    </script>
+
+    <script>
+    // Keep the version and download link pointing at the latest release
+    // automatically; the hardcoded values above are the fallback.
+    fetch("https://api.github.com/repos/tlatvys-ac/motionref-app/releases/latest")
+        .then((r) => r.json())
+        .then((rel) => {
+            const v = (rel.tag_name || "").replace(/^v/, "");
+            if (v) document.getElementById("version").textContent = "v" + v;
+            const asset = (rel.assets || []).find((a) => /\.zxp$/.test(a.name));
+            const el = document.getElementById("dl-zxp");
+            if (asset && el) el.href = asset.browser_download_url;
+        })
+        .catch(() => {});
+    </script>
+</div>
+</body>
+</html>
