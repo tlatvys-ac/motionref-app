@@ -158,6 +158,7 @@
         transform: translateX(-50%);
     }
     .shots figure { margin: 0; flex: 1 1 320px; min-width: 260px; }
+    .shots figure.wide { flex: 1 1 100%; max-width: 760px; margin: 0 auto; }
     .shots img {
         display: block;
         width: 100%;
@@ -230,9 +231,13 @@
         GIFs, and video in from the Project panel and arrange them next to
         your comp while you work.</p>
         <div class="buttons">
-            <a class="btn" id="dl-zxp" href="https://github.com/tlatvys-ac/motionref-app/releases/latest/download/MotionRef_v1.1.0.zxp">
+            <a class="btn" id="dl-zxp" href="https://github.com/tlatvys-ac/motionref-app/releases/latest/download/MotionRef_v1.2.0.zxp">
                 Download MotionRef (.zxp)
                 <small>After Effects extension · free · macOS</small>
+            </a>
+            <a class="btn" id="dl-saver" href="https://github.com/tlatvys-ac/motionref-app/releases/latest/download/MotionRef-Saver-0.3.1.zip">
+                Get MotionRef Saver (.zip)
+                <small>Chrome extension · free · beta</small>
             </a>
         </div>
     </div>
@@ -246,6 +251,11 @@
         open the .aep. Items link to the original files; nothing is copied
         into your project. The panel follows After Effects' light or dark
         appearance, and the board can be white, black, or any color.</p>
+        <p>Link a folder and its images and videos sit in a drawer beside the
+        board, ready to drag in, again without importing anything into your
+        project. Pair it with <strong>MotionRef Saver</strong>, a Chrome
+        extension that saves images, videos, and GIFs from Instagram and the
+        web into that folder.</p>
     </section>
 
     <section>
@@ -258,6 +268,10 @@
             <figure>
                 <img src="images/board.png" alt="A MotionRef board with stills, a paused video with a play button, and two items selected inside one transform box" loading="lazy">
                 <figcaption>Stills and a video, two items selected in one transform box</figcaption>
+            </figure>
+            <figure class="wide">
+                <img src="images/folders.png" alt="The Folders drawer beside the board: GIF, JPG and PNG thumbnails, WebM files hidden by their type chip, two new files marked with a blue dot" loading="lazy">
+                <figcaption>The Folders drawer: a linked folder's files, filtered by type, new ones marked</figcaption>
             </figure>
         </div>
     </section>
@@ -305,6 +319,20 @@
         drop them. Right-clicking the board offers <strong>Add Selected from
         Project</strong> too.</p>
 
+        <h3>Folders</h3>
+        <p>Click <strong>Folders</strong> (top right) and link a folder: a
+        downloads folder, a reference library, anything. Its images and
+        videos are listed newest first, subfolders included, and it's
+        watched, so new files appear as they arrive, marked with a blue dot.
+        Drag thumbnails onto the board, or double-click one; nothing is
+        imported into your project. Videos play when you hover them.</p>
+        <div class="controls">
+            <div>Click · <kbd>⌘</kbd> / <kbd>Shift</kbd> + click</div><div>select thumbnails</div>
+            <div>Drag · double-click</div><div>add them to the board</div>
+            <div>Type chips (GIF, JPG, WEBM…)</div><div>hide or show that file type, in every folder</div>
+            <div>Folder menu · <strong>+</strong></div><div>switch folders · link another</div>
+        </div>
+
         <h3>Selecting</h3>
         <div class="controls">
             <div>Click</div><div>select an item</div>
@@ -344,6 +372,45 @@
     </section>
 
     <section>
+        <div class="divider"><span>MotionRef Saver for Chrome</span></div>
+        <p>A Chrome extension that collects references into the folder
+        MotionRef's drawer shows (<code>Downloads/MotionRef</code>, or any
+        subfolder you choose).</p>
+        <h3>On Instagram</h3>
+        <p>Hover a post's image and click <strong>Save</strong>, or just tap
+        Instagram's own Save (bookmark): the image on screen is saved too.
+        Images are saved at the largest size the page offers.</p>
+        <p>Hover a video and click <strong>Save Video</strong>. Instagram
+        streams its videos, so it plays the video from the start and records
+        it as it plays (keep the tab on screen), then saves the video, a
+        looping GIF of it, or both. With both, the GIF goes in the folder and
+        the video in its <code>Videos</code> subfolder; hide the WEBM chip in
+        MotionRef to see only the GIFs.</p>
+        <h3>Anywhere on the web</h3>
+        <p>Right-click an image and choose <strong>Save Image to
+        MotionRef</strong>.</p>
+        <h3>Installing</h3>
+        <ol>
+            <li>Unzip <code>MotionRef-Saver.zip</code> somewhere you'll keep it.</li>
+            <li>Open <code>chrome://extensions</code> and turn on
+                <strong>Developer mode</strong> (top right).</li>
+            <li>Click <strong>Load unpacked</strong> and choose the
+                <code>MotionRef Saver</code> folder. Pin it from the puzzle-piece
+                menu; click its icon for the settings (save folder, GIF size,
+                video or GIF).</li>
+            <li>Save one image, then in MotionRef choose
+                <em>Folders&nbsp;→&nbsp;Link&nbsp;Folder…</em> and pick
+                <code>Downloads/MotionRef</code>.</li>
+        </ol>
+        <p class="fine">Beta. It isn't in the Chrome Web Store, so Chrome
+        loads it in developer mode. The bookmark autosave reads Instagram's
+        English labels and may need an update when Instagram changes its
+        page. GIFs are 15 frames a second, up to 30 seconds. It only runs on
+        instagram.com (and the image right-click menu); it doesn't read other
+        sites. A Firefox version is in the works.</p>
+    </section>
+
+    <section>
         <div class="divider"><span>Setup</span></div>
         <ol>
             <li><strong>Install the extension</strong> — open the
@@ -374,7 +441,7 @@
     </section>
 
     <footer>
-        MotionRef <span id="version">v1.1.0</span> ·
+        MotionRef <span id="version">v1.2.0</span> ·
         <a href="https://github.com/tlatvys-ac/motionref-app/releases">release notes</a> ·
         made by Thomas Latvys ·
         see also <a href="https://tlatvys-ac.github.io/anchor-buddy-app/">Anchor Buddy</a>,
@@ -420,9 +487,14 @@
         .then((rel) => {
             const v = (rel.tag_name || "").replace(/^v/, "");
             if (v) document.getElementById("version").textContent = "v" + v;
-            const asset = (rel.assets || []).find((a) => /\.zxp$/.test(a.name));
-            const el = document.getElementById("dl-zxp");
-            if (asset && el) el.href = asset.browser_download_url;
+            const assets = rel.assets || [];
+            const link = (id, re) => {
+                const asset = assets.find((a) => re.test(a.name));
+                const el = document.getElementById(id);
+                if (asset && el) el.href = asset.browser_download_url;
+            };
+            link("dl-zxp", /\.zxp$/);
+            link("dl-saver", /^MotionRef-Saver.*\.zip$/);
         })
         .catch(() => {});
     </script>
