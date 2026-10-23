@@ -57,6 +57,8 @@
         gap: 10px;
         justify-content: center;
         margin-top: 10px;
+        /* three buttons: wider than the text column (the hero centers it) */
+        width: min(860px, calc(100vw - 48px));
     }
     .btn {
         display: inline-block;
@@ -234,9 +236,13 @@
                 Download MotionRef (.zxp)
                 <small>After Effects extension · free · macOS</small>
             </a>
-            <a class="btn" id="dl-saver" href="https://github.com/tlatvys-ac/motionref-app/releases/latest/download/MotionRef-Saver-0.3.1.zip">
-                Get MotionRef Saver (.zip)
-                <small>Chrome extension · free · beta</small>
+            <a class="btn" id="dl-saver" href="https://github.com/tlatvys-ac/motionref-app/releases/latest/download/MotionRef-Saver-0.4.0.zip">
+                MotionRef Saver for Chrome
+                <small>.zip · free · beta</small>
+            </a>
+            <a class="btn" id="dl-saver-firefox" href="https://github.com/tlatvys-ac/motionref-app/releases/latest/download/MotionRef-Saver-0.4.0.xpi">
+                MotionRef Saver for Firefox
+                <small>.xpi · signed by Mozilla · beta</small>
             </a>
         </div>
     </div>
@@ -252,9 +258,9 @@
         appearance, and the board can be white, black, or any color.</p>
         <p>Link a folder and its images and videos sit in a drawer beside the
         board, ready to drag in, again without importing anything into your
-        project. Pair it with <strong>MotionRef Saver</strong>, a Chrome
-        extension that saves images, videos, and GIFs from Instagram and the
-        web into that folder.</p>
+        project. Pair it with <strong>MotionRef Saver</strong>, a Chrome and
+        Firefox extension that saves images, videos, and GIFs from Instagram
+        and the web into that folder.</p>
     </section>
 
     <section>
@@ -367,8 +373,8 @@
     </section>
 
     <section>
-        <div class="divider"><span>MotionRef Saver for Chrome</span></div>
-        <p>A Chrome extension that collects references into the folder
+        <div class="divider"><span>MotionRef Saver for Chrome and Firefox</span></div>
+        <p>A browser extension that collects references into the folder
         MotionRef's drawer shows (<code>Downloads/MotionRef</code>, or any
         subfolder you choose).</p>
         <h3>On Instagram</h3>
@@ -384,7 +390,21 @@
         <h3>Anywhere on the web</h3>
         <p>Right-click an image and choose <strong>Save Image to
         MotionRef</strong>.</p>
-        <h3>Installing</h3>
+        <h3>Installing in Firefox</h3>
+        <ol>
+            <li>Download <code>MotionRef-Saver.xpi</code> and open it in Firefox:
+                drag it onto a Firefox window, or choose
+                <em>File&nbsp;→&nbsp;Open&nbsp;File…</em>.</li>
+            <li>Click <strong>Add</strong>, then pin it from the puzzle-piece menu;
+                click its icon for the settings.</li>
+            <li>Save one image, then in MotionRef choose
+                <em>Folders&nbsp;→&nbsp;Link&nbsp;Folder…</em> and pick
+                <code>Downloads/MotionRef</code>.</li>
+        </ol>
+        <p class="fine">Signed by Mozilla, so it stays installed (Firefox 140 or
+        later). In Firefox the GIF is made in the Instagram tab after a video
+        is saved, so that tab is busy for a few seconds.</p>
+        <h3>Installing in Chrome</h3>
         <ol>
             <li>Unzip <code>MotionRef-Saver.zip</code> somewhere you'll keep it.</li>
             <li>Open <code>chrome://extensions</code> and turn on
@@ -402,7 +422,7 @@
         English labels and may need an update when Instagram changes its
         page. GIFs are 15 frames a second, up to 30 seconds. It only runs on
         instagram.com (and the image right-click menu); it doesn't read other
-        sites. A Firefox version is in the works.</p>
+        sites.</p>
     </section>
 
     <section>
@@ -490,6 +510,7 @@
             };
             link("dl-zxp", /\.zxp$/);
             link("dl-saver", /^MotionRef-Saver.*\.zip$/);
+            link("dl-saver-firefox", /^MotionRef-Saver.*\.xpi$/);
         })
         .catch(() => {});
     </script>
