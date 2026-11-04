@@ -8,213 +8,474 @@
 <link rel="icon" type="image/png" sizes="64x64" href="images/favicon.png">
 <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
 <meta name="description" content="MotionRef is a free After Effects panel for reference images, GIFs, and video: drag footage in from the Project panel, then move, resize, rotate, zoom, and pan. Each project keeps its own board.">
+<meta name="theme-color" content="#1E2024">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://tlatvys-ac.github.io/motionref-app/">
+<meta property="og:title" content="MotionRef — a reference board inside After Effects">
+<meta property="og:description" content="A reference board inside After Effects. Drag stills, GIFs, and video in from the Project panel and arrange them next to your comp while you work.">
+<meta property="og:image" content="https://tlatvys-ac.github.io/motionref-app/images/og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="A MotionRef board with four reference stills beside the Folders drawer of thumbnails">
+<meta name="twitter:card" content="summary_large_image">
 <style>
     :root {
         --bg: #1E2024;
         --surface: #2A2D33;
-        --border: #4A4D54;
+        --border: #3E424A;
         --text: #DDD;
         --text-strong: #FFF;
-        --muted: #8A8F98;
+        --muted: #9BA1AA;
         --accent: #4DA6FF;
+        --accent-hover: #74BAFF;
+        --on-accent: #0B1A2B;
+        /* the logo's colors */
+        --blue: #4DA6FF;
         --gold: #FFC53D;
+        --white: #FFF;
     }
     * { box-sizing: border-box; }
+    html { overflow-x: clip; }
     body {
         margin: 0;
         background: var(--bg);
         color: var(--text);
         font-family: -apple-system, "SF Pro Text", "Helvetica Neue", "Segoe UI", sans-serif;
+        font-size: 16px;
         line-height: 1.6;
         -webkit-font-smoothing: antialiased;
     }
     .wrap {
         max-width: 660px;
         margin: 0 auto;
-        padding: 56px 24px 80px;
+        padding: 64px 24px 48px;
     }
+    a { color: var(--accent); text-underline-offset: 2px; }
+    a:hover { color: var(--accent-hover); }
+    :focus-visible {
+        outline: 2px solid var(--text-strong);
+        outline-offset: 3px;
+        border-radius: 4px;
+    }
+    h1, h2, h3, .tagline, figcaption { text-wrap: balance; }
+
+    /* ---------------------------------------------------------- hero */
     .hero {
         display: flex;
         flex-direction: column;
         align-items: center;
         text-align: center;
-        gap: 14px;
-        margin-bottom: 44px;
     }
-    .mark { width: 96px; height: 96px; }
+    .mark { width: 112px; height: 112px; }
     h1 {
-        margin: 0;
-        font-size: 22px;
+        margin: 18px -0.3em 0 0;   /* cancel the trailing letter-spacing so it centers */
+        font-size: 28px;
         font-weight: 700;
         letter-spacing: 0.3em;
+        line-height: 1.2;
         color: var(--text-strong);
     }
-    .tagline { margin: 0; color: var(--muted); font-size: 15px; max-width: 460px; }
-
+    .tagline {
+        margin: 12px 0 0;
+        color: #B4B9C1;
+        font-size: 18px;
+        max-width: 520px;
+    }
     .buttons {
         display: flex;
         flex-wrap: wrap;
-        gap: 10px;
         justify-content: center;
-        margin-top: 10px;
-        /* three buttons: wider than the text column (the hero centers it) */
-        width: min(860px, calc(100vw - 48px));
+        gap: 12px;
+        margin-top: 28px;
     }
     .btn {
-        display: inline-block;
-        background: var(--surface);
-        border: 1px solid var(--accent);
-        border-radius: 6px;
-        color: var(--text-strong);
-        font-size: 14px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+        min-width: 296px;
+        text-align: left;
+        background: var(--accent);
+        border-radius: 8px;
+        color: var(--on-accent);
+        font-size: 16px;
         font-weight: 700;
-        padding: 10px 22px;
+        line-height: 1.4;
+        padding: 12px 28px;
         text-decoration: none;
-        transition: border-color 120ms, background-color 120ms;
+        box-shadow: 0 6px 24px rgba(77, 166, 255, 0.25);
+        transition: background-color 120ms, box-shadow 120ms, transform 120ms;
         white-space: nowrap;
     }
-    .btn:hover { border-color: #FFF; }
-    .btn:active { background: rgba(77, 166, 255, 0.15); }
-    .btn small { display: block; font-weight: 500; font-size: 11px; color: var(--muted); }
-    /* The download buttons: the product's logo, then the label */
-    .buttons .btn { display: inline-flex; align-items: center; gap: 11px; text-align: left; }
+    .btn:hover {
+        background: var(--accent-hover);
+        color: var(--on-accent);
+        box-shadow: 0 8px 32px rgba(77, 166, 255, 0.4);
+        transform: translateY(-1px);
+    }
+    .btn:active { transform: none; box-shadow: 0 4px 16px rgba(77, 166, 255, 0.25); }
+    .btn small {
+        display: block;
+        font-weight: 500;
+        font-size: 12px;
+        color: rgba(11, 26, 43, 0.72);
+    }
     .btn-logo { width: 26px; height: 26px; flex: none; }
     .btn-text { display: block; }
+    /* the optional browser extension: outlined, so the panel's button leads */
+    .btn.btn-secondary {
+        background: transparent;
+        color: var(--text-strong);
+        box-shadow: inset 0 0 0 1px var(--accent);
+    }
+    .btn.btn-secondary:hover {
+        background: rgba(77, 166, 255, 0.12);
+        color: var(--text-strong);
+        box-shadow: inset 0 0 0 1px var(--accent-hover);
+    }
+    .btn.btn-secondary small { color: var(--muted); }
+    /* when we know the visitor's browser, its button keeps the accent
+       outline (a little stronger) and the other one goes quiet */
+    .saver-buttons.has-match .btn-secondary { box-shadow: inset 0 0 0 1px var(--border); }
+    .saver-buttons.has-match .btn-secondary.match {
+        background: rgba(77, 166, 255, 0.1);
+        box-shadow: inset 0 0 0 2px var(--accent);
+    }
+    .saver-buttons { margin: 24px 0 8px; }
+    .saver-buttons .btn { min-width: 0; flex: 1 1 280px; padding: 12px 20px; }
+    .hero-notes {
+        margin: 16px 0 0;
+        color: var(--muted);
+        font-size: 14px;
+        line-height: 1.7;
+        max-width: 600px;
+    }
+    .hero-notes p { margin: 0 0 4px; text-wrap: balance; }
 
-    section { margin-top: 40px; }
-    .divider {
+    /* Breaks out of the text column, like the gallery. */
+    .hero-media {
+        flex: none;
+        width: min(756px, calc(100vw - 48px));
+        margin-top: 44px;
+        border-radius: 12px;
+        box-shadow: 0 24px 64px rgba(0, 0, 0, 0.45);
+    }
+    .hero-media .shot { border-radius: 12px; }
+
+    /* ------------------------------------------------------ sections */
+    section { margin-top: 72px; scroll-margin-top: 24px; }
+    h2.divider {
         display: flex;
         align-items: center;
-        gap: 10px;
-        margin-bottom: 14px;
+        gap: 12px;
+        margin: 0 0 24px;
+        font-size: 12px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+        color: var(--muted);
     }
-    .divider::before, .divider::after {
+    h2.divider::before, h2.divider::after {
         content: "";
         flex: 1;
+        min-width: 24px;
         height: 1px;
         background: var(--border);
     }
-    .divider span {
-        font-size: 11px;
-        font-weight: 600;
-        text-transform: uppercase;
-        letter-spacing: 0.1em;
-        color: var(--muted);
-    }
+    h2.divider { text-align: center; }
     h3 {
-        margin: 18px 0 6px;
-        font-size: 13px;
+        margin: 32px 0 8px;
+        font-size: 17px;
         font-weight: 700;
+        line-height: 1.4;
         color: var(--text-strong);
     }
-    ol { margin: 0; padding-left: 22px; }
-    li { margin-bottom: 10px; }
-    li::marker { color: var(--accent); font-weight: 700; }
-    a { color: var(--accent); }
-    .fine { color: var(--muted); font-size: 12px; }
+    h2 + h3 { margin-top: 0; }
+    p { margin: 0 0 12px; }
+    .lead { font-size: 17px; }
+    .fine { color: var(--muted); font-size: 14px; }
+    strong { color: var(--text-strong); }
+    a strong { color: inherit; }
     code {
         background: var(--surface);
         border: 1px solid var(--border);
         border-radius: 4px;
         padding: 1px 6px;
-        font-size: 12px;
+        font: 0.875em/1.5 ui-monospace, "SF Mono", Menlo, monospace;
+        white-space: nowrap;
     }
     kbd {
+        display: inline-block;
+        min-width: 1.6em;
         background: var(--surface);
         border: 1px solid var(--border);
         border-bottom-width: 2px;
         border-radius: 4px;
         padding: 0 6px;
         font: inherit;
-        font-size: 12px;
+        font-size: 13px;
+        line-height: 1.35;
+        text-align: center;
         color: var(--text-strong);
     }
+
+    /* mouse and keyboard controls: action on the left, result on the right */
     .controls {
         display: grid;
-        grid-template-columns: auto 1fr;
-        gap: 5px 18px;
-        font-size: 13px;
-        margin-top: 6px;
+        grid-template-columns: minmax(0, auto) 1fr;
+        gap: 8px 20px;
+        margin: 8px 0 12px;
+        font-size: 15px;
+        line-height: 1.5;
     }
-    .controls div:nth-child(odd) { white-space: nowrap; }
-    .formats {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 12px;
-        font-size: 13px;
-    }
-    .formats > div {
-        background: var(--surface);
-        border: 1px solid var(--border);
-        border-radius: 6px;
-        padding: 12px 14px;
-    }
-    .formats strong { display: block; color: var(--text-strong); margin-bottom: 4px; }
-    .formats p { margin: 0; color: var(--text); }
-    .formats .how { margin-top: 6px; color: var(--muted); font-size: 12px; }
+    .controls dt { color: var(--text-strong); white-space: nowrap; }
+    .controls dd { margin: 0; }
 
-    /* Screenshots break out of the text column, like the other pages. */
-    .shots {
-        display: flex;
-        gap: 16px;
-        align-items: flex-start;
-        flex-wrap: wrap;
+    /* ------------------------------------------------------- gallery */
+    /* Screenshots break out of the text column. */
+    .gallery {
         width: min(1080px, calc(100vw - 48px));
         margin-left: 50%;
         transform: translateX(-50%);
     }
-    .shots figure { margin: 0; flex: 1 1 320px; min-width: 260px; }
-    .shots img {
+    .shots {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+    }
+    .shots figure { margin: 0; }
+    .shot {
         display: block;
         width: 100%;
-        height: auto;
-        border-radius: 8px;
+        padding: 0;
         border: 1px solid var(--border);
+        border-radius: 10px;
+        background: var(--surface);
+        overflow: hidden;
         cursor: zoom-in;
         transition: border-color 120ms;
     }
-    .shots img:hover { border-color: var(--accent); }
+    .shot:hover { border-color: var(--accent); }
+    .shot:focus-visible { border-radius: 10px; }
+    .shot img {
+        display: block;
+        width: 100%;
+        height: auto;
+    }
     .shots figcaption {
-        margin-top: 6px;
-        font-size: 11px;
+        margin-top: 8px;
+        font-size: 13px;
         color: var(--muted);
         text-align: center;
     }
+    .shots figcaption strong { font-weight: 600; }
+
+    /* ------------------------------------------------- feature cards */
+    .features {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+        margin: 0 0 12px;
+        padding: 0;
+        list-style: none;
+    }
+    .features li {
+        padding: 16px 18px;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        font-size: 15px;
+        line-height: 1.5;
+    }
+    .features li strong {
+        display: block;
+        margin-bottom: 2px;
+        font-size: 16px;
+    }
+    .features .how {
+        display: block;
+        margin-top: 8px;
+        color: var(--muted);
+        font-size: 14px;
+    }
+
+    /* --------------------------------------------------------- steps */
+    .steps {
+        margin: 0 0 12px;
+        padding: 0;
+        list-style: none;
+        counter-reset: step;
+    }
+    .steps li {
+        position: relative;
+        margin-bottom: 16px;
+        padding-left: 44px;
+        counter-increment: step;
+    }
+    .steps li::before {
+        content: counter(step);
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        background: var(--c);
+        color: var(--on-accent);
+        font-size: 14px;
+        font-weight: 700;
+        line-height: 28px;
+        text-align: center;
+    }
+    .steps li:nth-child(3n+1) { --c: var(--blue); }
+    .steps li:nth-child(3n+2) { --c: var(--gold); }
+    .steps li:nth-child(3n+3) { --c: var(--white); }
+
+    .callout {
+        margin: 28px 0 0;
+        padding: 16px 20px;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-left: 3px solid var(--gold);
+        border-radius: 8px;
+        scroll-margin-top: 24px;
+    }
+    .callout h3 { margin: 0 0 6px; font-size: 16px; }
+    .callout p { margin: 0 0 8px; font-size: 15px; }
+    .callout p:last-child { margin-bottom: 0; }
+
+    details {
+        margin-top: 24px;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+    }
+    summary {
+        padding: 14px 20px;
+        font-weight: 600;
+        color: var(--text-strong);
+        cursor: pointer;
+        list-style: none;
+    }
+    summary::-webkit-details-marker { display: none; }
+    summary::before {
+        content: "";
+        display: inline-block;
+        width: 6px;
+        height: 6px;
+        margin: 0 12px 2px 0;
+        border-right: 2px solid var(--muted);
+        border-bottom: 2px solid var(--muted);
+        transform: rotate(-45deg);
+        transition: transform 120ms;
+    }
+    details[open] summary::before { transform: rotate(45deg); }
+    .details-body { padding: 0 20px 18px; }
+    .details-body h3 { margin: 12px 0 6px; font-size: 16px; }
+    .details-body h3 ~ h3 { margin-top: 24px; }
+
+    .path {
+        display: flex;
+        align-items: stretch;
+        margin: 8px 0 12px;
+        background: #17191C;
+        border: 1px solid var(--border);
+        border-radius: 6px;
+    }
+    .path code {
+        flex: 1;
+        min-width: 0;
+        padding: 9px 12px;
+        overflow-x: auto;
+        white-space: nowrap;
+        background: none;
+        border: 0;
+        border-radius: 0;
+        font: 13px/1.5 ui-monospace, "SF Mono", Menlo, monospace;
+        color: var(--text);
+    }
+    .copy {
+        flex: none;
+        padding: 0 14px;
+        border: 0;
+        border-left: 1px solid var(--border);
+        border-radius: 0 6px 6px 0;
+        background: transparent;
+        color: var(--accent);
+        font-family: inherit;
+        font-size: 13px;
+        font-weight: 600;
+        cursor: pointer;
+    }
+    .copy:hover { background: var(--surface); }
+
+    /* ------------------------------------------------------ lightbox */
     .lightbox {
         position: fixed;
         inset: 0;
-        display: none;
+        display: flex;
         align-items: center;
         justify-content: center;
-        background: rgba(10, 11, 13, 0.9);
+        background: rgba(10, 11, 13, 0.92);
         z-index: 100;
         cursor: zoom-out;
         padding: 24px;
     }
-    .lightbox.open { display: flex; }
+    .lightbox[hidden] { display: none; }
     .lightbox img {
         max-width: 96vw;
         max-height: 92vh;
         width: auto;
         height: auto;
-        border-radius: 8px;
+        border-radius: 10px;
         border: 1px solid var(--border);
         box-shadow: 0 12px 48px rgba(0, 0, 0, 0.6);
     }
+    .lightbox-close {
+        position: absolute;
+        top: 16px;
+        right: 16px;
+        width: 40px;
+        height: 40px;
+        border: 1px solid var(--border);
+        border-radius: 50%;
+        background: var(--surface);
+        color: var(--text-strong);
+        font-size: 22px;
+        line-height: 1;
+        cursor: pointer;
+    }
+
+    /* -------------------------------------------------------- footer */
     footer {
-        margin-top: 56px;
+        margin-top: 88px;
+        padding-top: 24px;
+        border-top: 1px solid var(--border);
         text-align: center;
         color: var(--muted);
-        font-size: 12px;
+        font-size: 13px;
     }
+    footer p { margin: 0 0 6px; }
+    footer a, .nowrap { text-decoration: none; white-space: nowrap; }
+    footer a:hover { text-decoration: underline; }
+    .sep { margin: 0 2px 0 6px; opacity: 0.5; }
+
     @media (max-width: 620px) {
-        .formats { grid-template-columns: 1fr; }
+        .wrap { padding-top: 48px; }
+        .shots, .features { grid-template-columns: 1fr; }
+        section { margin-top: 56px; }
+        .btn { min-width: 0; width: 100%; }
+        .controls { grid-template-columns: 1fr; gap: 0; }
+        .controls dd { margin-bottom: 10px; color: var(--muted); }
+        .controls dt { white-space: normal; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+        * { transition: none !important; }
     }
 </style>
 </head>
 <body>
 <div class="wrap">
-    <div class="hero">
+    <header class="hero">
         <svg class="mark" viewBox="0 0 64 64" aria-hidden="true">
             <g transform="rotate(-9 26 26)">
                 <rect x="7" y="12" width="36" height="27" rx="3.5" fill="#5A5E66"/>
@@ -237,95 +498,109 @@
         your comp while you work.</p>
         <div class="buttons">
             <a class="btn" id="dl-zxp" href="https://github.com/tlatvys-ac/motionref-app/releases/latest/download/MotionRef_v1.2.0.zxp">
-                <svg class="btn-logo" viewBox="0 0 24 24" aria-hidden="true"><path fill="#9999FF" d="M8.54 10.73c-.1-.31-.19-.61-.29-.92s-.19-.6-.27-.89c-.08-.28-.15-.54-.22-.78h-.02c-.09.43-.2.86-.34 1.29-.15.48-.3.98-.46 1.48-.13.51-.29.98-.44 1.4h2.54c-.06-.21-.14-.46-.23-.72-.09-.27-.18-.56-.27-.86zm8.58-.29c-.55-.03-1.07.26-1.33.76-.12.23-.19.47-.22.72h2.109c.26 0 .45 0 .57-.01.08-.01.16-.03.23-.08v-.1c0-.13-.021-.25-.061-.37-.178-.56-.708-.94-1.298-.92zM19.75.3H4.25C1.9.3 0 2.2 0 4.55v14.9c0 2.35 1.9 4.25 4.25 4.25h15.5c2.35 0 4.25-1.9 4.25-4.25V4.55C24 2.2 22.1.3 19.75.3zm-7.04 16.511h-2.09c-.07.01-.14-.041-.16-.11l-.82-2.4H5.92l-.76 2.36c-.02.09-.1.15-.19.14H3.09c-.11 0-.14-.06-.11-.18L6.2 7.39c.03-.1.06-.19.1-.31.04-.21.06-.43.06-.65-.01-.05.03-.1.08-.11h2.59c.07 0 .12.03.13.08l3.65 10.25c.03.11.001.161-.1.161zm7.851-3.991c-.021.189-.031.33-.041.42-.01.07-.069.13-.14.13-.06 0-.17.01-.33.021-.159.02-.35.029-.579.029-.23 0-.471-.04-.73-.04h-3.17c.039.31.14.62.31.89.181.271.431.48.729.601.4.17.841.26 1.281.25.35-.011.699-.04 1.039-.11.311-.039.61-.119.891-.23.05-.039.08-.02.08.08v1.531c0 .039-.01.08-.021.119-.021.03-.04.051-.069.07-.32.14-.65.24-1 .3-.471.09-.94.13-1.42.12-.761 0-1.4-.12-1.92-.35-.49-.211-.921-.541-1.261-.95-.319-.39-.55-.83-.69-1.31-.14-.471-.209-.961-.209-1.461 0-.539.08-1.07.25-1.59.16-.5.41-.96.75-1.37.33-.4.739-.72 1.209-.95.471-.23 1.03-.31 1.67-.31.531-.01 1.06.09 1.55.31.41.18.77.45 1.05.8.26.34.47.72.601 1.14.129.4.189.81.189 1.22 0 .24-.01.45-.019.64z"/></svg>
+                <svg class="btn-logo" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M8.54 10.73c-.1-.31-.19-.61-.29-.92s-.19-.6-.27-.89c-.08-.28-.15-.54-.22-.78h-.02c-.09.43-.2.86-.34 1.29-.15.48-.3.98-.46 1.48-.13.51-.29.98-.44 1.4h2.54c-.06-.21-.14-.46-.23-.72-.09-.27-.18-.56-.27-.86zm8.58-.29c-.55-.03-1.07.26-1.33.76-.12.23-.19.47-.22.72h2.109c.26 0 .45 0 .57-.01.08-.01.16-.03.23-.08v-.1c0-.13-.021-.25-.061-.37-.178-.56-.708-.94-1.298-.92zM19.75.3H4.25C1.9.3 0 2.2 0 4.55v14.9c0 2.35 1.9 4.25 4.25 4.25h15.5c2.35 0 4.25-1.9 4.25-4.25V4.55C24 2.2 22.1.3 19.75.3zm-7.04 16.511h-2.09c-.07.01-.14-.041-.16-.11l-.82-2.4H5.92l-.76 2.36c-.02.09-.1.15-.19.14H3.09c-.11 0-.14-.06-.11-.18L6.2 7.39c.03-.1.06-.19.1-.31.04-.21.06-.43.06-.65-.01-.05.03-.1.08-.11h2.59c.07 0 .12.03.13.08l3.65 10.25c.03.11.001.161-.1.161zm7.851-3.991c-.021.189-.031.33-.041.42-.01.07-.069.13-.14.13-.06 0-.17.01-.33.021-.159.02-.35.029-.579.029-.23 0-.471-.04-.73-.04h-3.17c.039.31.14.62.31.89.181.271.431.48.729.601.4.17.841.26 1.281.25.35-.011.699-.04 1.039-.11.311-.039.61-.119.891-.23.05-.039.08-.02.08.08v1.531c0 .039-.01.08-.021.119-.021.03-.04.051-.069.07-.32.14-.65.24-1 .3-.471.09-.94.13-1.42.12-.761 0-1.4-.12-1.92-.35-.49-.211-.921-.541-1.261-.95-.319-.39-.55-.83-.69-1.31-.14-.471-.209-.961-.209-1.461 0-.539.08-1.07.25-1.59.16-.5.41-.96.75-1.37.33-.4.739-.72 1.209-.95.471-.23 1.03-.31 1.67-.31.531-.01 1.06.09 1.55.31.41.18.77.45 1.05.8.26.34.47.72.601 1.14.129.4.189.81.189 1.22 0 .24-.01.45-.019.64z"/></svg>
                 <span class="btn-text">Download MotionRef (.zxp)
                     <small>After Effects extension · free · macOS</small></span>
             </a>
-            <a class="btn" id="dl-saver" href="https://github.com/tlatvys-ac/motionref-app/releases/latest/download/MotionRef-Saver-0.6.0.zip">
-                <svg class="btn-logo" viewBox="0 0 24 24" aria-hidden="true"><path fill="#4285F4" d="M12 0C8.21 0 4.831 1.757 2.632 4.501l3.953 6.848A5.454 5.454 0 0 1 12 6.545h10.691A12 12 0 0 0 12 0zM1.931 5.47A11.943 11.943 0 0 0 0 12c0 6.012 4.42 10.991 10.189 11.864l3.953-6.847a5.45 5.45 0 0 1-6.865-2.29zm13.342 2.166a5.446 5.446 0 0 1 1.45 7.09l.002.001h-.002l-5.344 9.257c.206.01.413.016.621.016 6.627 0 12-5.373 12-12 0-1.54-.29-3.011-.818-4.364zM12 16.364a4.364 4.364 0 1 1 0-8.728 4.364 4.364 0 0 1 0 8.728Z"/></svg>
-                <span class="btn-text">MotionRef Saver for Chrome
-                    <small>.zip · free · beta</small></span>
-            </a>
-            <a class="btn" id="dl-saver-firefox" href="https://github.com/tlatvys-ac/motionref-app/releases/latest/download/MotionRef-Saver-0.6.0.xpi">
-                <svg class="btn-logo" viewBox="0 0 24 24" aria-hidden="true"><path fill="#FF7139" d="M8.824 7.287c.008 0 .004 0 0 0zm-2.8-1.4c.006 0 .003 0 0 0zm16.754 2.161c-.505-1.215-1.53-2.528-2.333-2.943.654 1.283 1.033 2.57 1.177 3.53l.002.02c-1.314-3.278-3.544-4.6-5.366-7.477-.091-.147-.184-.292-.273-.446a3.545 3.545 0 01-.13-.24 2.118 2.118 0 01-.172-.46.03.03 0 00-.027-.03.038.038 0 00-.021 0l-.006.001a.037.037 0 00-.01.005L15.624 0c-2.585 1.515-3.657 4.168-3.932 5.856a6.197 6.197 0 00-2.305.587.297.297 0 00-.147.37c.057.162.24.24.396.17a5.622 5.622 0 012.008-.523l.067-.005a5.847 5.847 0 011.957.222l.095.03a5.816 5.816 0 01.616.228c.08.036.16.073.238.112l.107.055a5.835 5.835 0 01.368.211 5.953 5.953 0 012.034 2.104c-.62-.437-1.733-.868-2.803-.681 4.183 2.09 3.06 9.292-2.737 9.02a5.164 5.164 0 01-1.513-.292 4.42 4.42 0 01-.538-.232c-1.42-.735-2.593-2.121-2.74-3.806 0 0 .537-2 3.845-2 .357 0 1.38-.998 1.398-1.287-.005-.095-2.029-.9-2.817-1.677-.422-.416-.622-.616-.8-.767a3.47 3.47 0 00-.301-.227 5.388 5.388 0 01-.032-2.842c-1.195.544-2.124 1.403-2.8 2.163h-.006c-.46-.584-.428-2.51-.402-2.913-.006-.025-.343.176-.389.206-.406.29-.787.616-1.136.974-.397.403-.76.839-1.085 1.303a9.816 9.816 0 00-1.562 3.52c-.003.013-.11.487-.19 1.073-.013.09-.026.181-.037.272a7.8 7.8 0 00-.069.667l-.002.034-.023.387-.001.06C.386 18.795 5.593 24 12.016 24c5.752 0 10.527-4.176 11.463-9.661.02-.149.035-.298.052-.448.232-1.994-.025-4.09-.753-5.844z"/></svg>
-                <span class="btn-text">MotionRef Saver for Firefox
-                    <small>.xpi · signed by Mozilla · beta</small></span>
-            </a>
         </div>
-    </div>
+        <div class="hero-notes">
+            <p>Self-signed, so your ZXP installer may show an “unverified
+            publisher” notice. <a href="#unverified">That's expected</a></p>
+            <p>Optional: <a href="#saver">MotionRef Saver</a>, a Chrome and
+            Firefox extension that saves references from the web</p>
+        </div>
+        <div class="hero-media">
+            <button class="shot" type="button" aria-haspopup="dialog">
+                <picture>
+                    <source type="image/avif" srcset="images/folders.avif">
+                    <img src="images/folders.jpg" width="1640" height="1040" decoding="async" fetchpriority="high" alt="A MotionRef board with four reference stills, one of them rotated, beside the Folders drawer: a grid of GIF, JPG and PNG thumbnails under type chips, two new files marked with a blue dot">
+                </picture>
+            </button>
+        </div>
+    </header>
 
+    <main>
     <section>
-        <div class="divider"><span>About</span></div>
-        <p>MotionRef is a blank, endless board docked in After Effects. Drop
-        footage on it and it appears at its real size. Move it, scale it,
-        rotate it, stack it, zoom in on details, and pan around. Each project
-        keeps its own board, so your references are waiting the next time you
-        open the .aep. Items link to the original files; nothing is copied
-        into your project. The panel follows After Effects' light or dark
-        appearance, and the board can be white, black, or any color.</p>
+        <h2 class="divider">About</h2>
+        <p class="lead">MotionRef is a blank, endless board docked in After
+        Effects. Drop footage on it and it appears at its real size. Move it,
+        scale it, rotate it, stack it, zoom in on details, and pan around.
+        Each project keeps its own board, so your references are waiting the
+        next time you open the .aep. Items link to the original files;
+        nothing is copied into your project. The panel follows After Effects'
+        light or dark appearance, and the board can be white, black, or any
+        color.</p>
         <p>Link a folder and its images and videos sit in a drawer beside the
         board, ready to drag in, again without importing anything into your
-        project. Pair it with <strong>MotionRef Saver</strong>, a Chrome and
-        Firefox extension that saves images, videos, and GIFs from Instagram,
-        Pinterest, Dribbble, Behance, and the web into that folder.</p>
+        project. Pair it with <a href="#saver"><strong>MotionRef Saver</strong></a>,
+        a Chrome and Firefox extension that saves images, videos, and GIFs
+        from Instagram, Pinterest, Dribbble, Behance, and the web into that
+        folder.</p>
     </section>
 
     <section>
-        <div class="divider"><span>What it looks like</span></div>
-        <div class="shots">
-            <figure>
-                <img src="images/empty.png" alt="The empty MotionRef panel: drop images, GIFs, and videos here" loading="lazy">
-                <figcaption>A new board, ready for footage</figcaption>
-            </figure>
-            <figure>
-                <img src="images/folders.png" alt="The Folders drawer beside the board: GIF, JPG and PNG thumbnails, WebM files hidden by their type chip, two new files marked with a blue dot" loading="lazy">
-                <figcaption>The Folders drawer: a linked folder's files, filtered by type, new ones marked</figcaption>
-            </figure>
+        <h2 class="divider">What it looks like</h2>
+        <div class="gallery">
+            <div class="shots">
+                <figure>
+                    <button class="shot" type="button" aria-haspopup="dialog" data-full="images/empty">
+                        <picture>
+                            <source type="image/avif" srcset="images/empty-crop.avif">
+                            <img src="images/empty-crop.png" width="820" height="615" loading="lazy" decoding="async" alt="The empty MotionRef panel: drop images, GIFs, and videos here">
+                        </picture>
+                    </button>
+                    <figcaption><strong>A new board</strong> — ready for footage</figcaption>
+                </figure>
+                <figure>
+                    <button class="shot" type="button" aria-haspopup="dialog" data-full="images/folders">
+                        <picture>
+                            <source type="image/avif" srcset="images/folders-crop.avif">
+                            <img src="images/folders-crop.jpg" width="560" height="420" loading="lazy" decoding="async" alt="Close-up of the Folders drawer beside the board: GIF, JPG and PNG thumbnails, WebM files hidden by their type chip, two new files marked with a blue dot">
+                        </picture>
+                    </button>
+                    <figcaption><strong>The Folders drawer</strong> — a linked folder's files, filtered by type, new ones marked</figcaption>
+                </figure>
+            </div>
         </div>
     </section>
 
     <section>
-        <div class="divider"><span>Supported media</span></div>
-        <div class="formats">
-            <div>
-                <strong>Stills</strong>
-                <p>PNG, JPEG, GIF, WebP, BMP, SVG, AVIF</p>
-                <p class="how">Shown as-is. Animated GIFs play and loop on their own.</p>
-            </div>
-            <div>
-                <strong>Video</strong>
-                <p>MP4 and MOV with H.264, MP4 with AV1, WebM (VP8, VP9)</p>
-                <p class="how">Plays as-is. Videos start paused; click ▶ to
-                play. They loop, muted.</p>
-            </div>
-            <div>
-                <strong>Design files</strong>
-                <p>PSD, TIFF, TGA, HEIC, OpenEXR, JPEG 2000, Illustrator, PDF</p>
-                <p class="how">Converted to a preview with macOS's built-in
-                tools the first time they're added.</p>
-            </div>
-            <div>
-                <strong>Pro video</strong>
-                <p>ProRes, HEVC</p>
-                <p class="how">Converted to a playable H.264 preview. Codecs
+        <h2 class="divider">Supported media</h2>
+        <ul class="features">
+            <li><strong>Stills</strong>PNG, JPEG, GIF, WebP, BMP, SVG, AVIF
+                <span class="how">Shown as-is. Animated GIFs play and loop on their own.</span></li>
+            <li><strong>Video</strong>MP4 and MOV with H.264, MP4 with AV1, WebM (VP8, VP9)
+                <span class="how">Plays as-is. Videos start paused; click ▶ to
+                play. They loop, muted.</span></li>
+            <li><strong>Design files</strong>PSD, TIFF, TGA, HEIC, OpenEXR, JPEG 2000, Illustrator, PDF
+                <span class="how">Converted to a preview with macOS's built-in
+                tools the first time they're added.</span></li>
+            <li><strong>Pro video</strong>ProRes, HEVC
+                <span class="how">Converted to a playable H.264 preview. Codecs
                 macOS can no longer read, like QuickTime Animation, get a still
-                preview frame rendered by After Effects.</p>
-            </div>
+                preview frame rendered by After Effects.</span></li>
+        </ul>
+        <div class="callout">
+            <h3>Good to know</h3>
+            <p>Previews don't keep transparency. Image sequences show their
+            first frame. Comps, solids, and audio aren't added.</p>
         </div>
-        <p class="fine">Previews are cached in
-        <code>~/Library/Caches/MotionRef</code> and rebuilt when the source
-        file changes; the original is never touched. Previews don't keep
-        transparency. Image sequences show their first frame. Comps, solids,
-        and audio aren't added.</p>
     </section>
 
     <section>
-        <div class="divider"><span>Working with media</span></div>
+        <h2 class="divider">Working with media</h2>
         <h3>Adding</h3>
         <p>Select footage in the Project panel and drag it onto the board.
         Several items land in rows, in Project panel order, from where you
         drop them. Right-clicking the board offers <strong>Add Selected from
         Project</strong> too.</p>
+
+        <h3>Getting around</h3>
+        <dl class="controls">
+            <dt>Scroll wheel</dt><dd>zoom in and out around the cursor</dd>
+            <dt><kbd>Space</kbd> + drag</dt><dd>pan (or drag with the middle mouse button)</dd>
+            <dt><kbd>F</kbd></dt><dd>fit the selection, or the whole board, in view</dd>
+        </dl>
 
         <h3>Folders</h3>
         <p>Click <strong>Folders</strong> (top right) and link a folder: a
@@ -334,41 +609,6 @@
         watched, so new files appear as they arrive, marked with a blue dot.
         Drag thumbnails onto the board, or double-click one; nothing is
         imported into your project. Videos play when you hover them.</p>
-        <div class="controls">
-            <div>Click · <kbd>⌘</kbd> / <kbd>Shift</kbd> + click</div><div>select thumbnails</div>
-            <div>Drag · double-click</div><div>add them to the board</div>
-            <div>Type chips (GIF, JPG, WEBM…)</div><div>hide or show that file type, in every folder</div>
-            <div>Folder menu · <strong>+</strong></div><div>switch folders · link another</div>
-        </div>
-
-        <h3>Selecting</h3>
-        <div class="controls">
-            <div>Click</div><div>select an item</div>
-            <div><kbd>Shift</kbd> + click</div><div>add or remove an item</div>
-            <div>Drag on empty space</div><div>box-select everything it touches (<kbd>Shift</kbd> adds)</div>
-            <div><kbd>⌘</kbd> <kbd>A</kbd> · <kbd>Esc</kbd></div><div>select all · deselect</div>
-        </div>
-
-        <h3>Moving, resizing, rotating</h3>
-        <div class="controls">
-            <div>Drag an item</div><div>move the selection (<kbd>Shift</kbd> locks to one axis)</div>
-            <div><kbd>←</kbd> <kbd>↑</kbd> <kbd>↓</kbd> <kbd>→</kbd></div><div>nudge (<kbd>Shift</kbd> for 10&nbsp;px)</div>
-            <div>Drag a handle</div><div>resize, keeping the aspect ratio</div>
-            <div>+ <kbd>Shift</kbd> · + <kbd>Option</kbd></div><div>stretch freely · resize from the center</div>
-            <div>Drag outside a corner</div><div>rotate (<kbd>Shift</kbd> snaps to 15°)</div>
-            <div><kbd>]</kbd> · <kbd>[</kbd></div><div>bring to front · send to back</div>
-            <div><kbd>Delete</kbd></div><div>remove from the board</div>
-            <div><kbd>⌘</kbd> <kbd>Z</kbd> · <kbd>⌘</kbd> <kbd>⇧</kbd> <kbd>Z</kbd></div><div>undo · redo</div>
-        </div>
-        <p class="fine">Several selected items share one transform box, so
-        they move, scale, and rotate together.</p>
-
-        <h3>Getting around</h3>
-        <div class="controls">
-            <div>Scroll wheel</div><div>zoom in and out around the cursor</div>
-            <div><kbd>Space</kbd> + drag</div><div>pan (or drag with the middle mouse button)</div>
-            <div><kbd>F</kbd></div><div>fit the selection, or the whole board, in view</div>
-        </div>
 
         <h3>Right-click menu</h3>
         <p>Play / Pause, Bring to Front, Send to Back, <strong>Reverse
@@ -377,13 +617,105 @@
         100%. At the bottom, <strong>Background</strong> sets the board to
         Match After Effects (the default), White, Black, or a custom color
         from a picker; the choice applies to every project.</p>
+
+        <details>
+            <summary>All mouse and keyboard controls</summary>
+            <div class="details-body">
+                <h3>Selecting</h3>
+                <dl class="controls">
+                    <dt>Click</dt><dd>select an item</dd>
+                    <dt><kbd>Shift</kbd> + click</dt><dd>add or remove an item</dd>
+                    <dt>Drag on empty space</dt><dd>box-select everything it touches (<kbd>Shift</kbd> adds)</dd>
+                    <dt><kbd>⌘</kbd> <kbd>A</kbd> · <kbd>Esc</kbd></dt><dd>select all · deselect</dd>
+                </dl>
+
+                <h3>Moving, resizing, rotating</h3>
+                <dl class="controls">
+                    <dt>Drag an item</dt><dd>move the selection (<kbd>Shift</kbd> locks to one axis)</dd>
+                    <dt><kbd>←</kbd> <kbd>↑</kbd> <kbd>↓</kbd> <kbd>→</kbd></dt><dd>nudge (<kbd>Shift</kbd> for 10&nbsp;px)</dd>
+                    <dt>Drag a handle</dt><dd>resize, keeping the aspect ratio</dd>
+                    <dt>+ <kbd>Shift</kbd> · + <kbd>Option</kbd></dt><dd>stretch freely · resize from the center</dd>
+                    <dt>Drag outside a corner</dt><dd>rotate (<kbd>Shift</kbd> snaps to 15°)</dd>
+                    <dt><kbd>]</kbd> · <kbd>[</kbd></dt><dd>bring to front · send to back</dd>
+                    <dt><kbd>Delete</kbd></dt><dd>remove from the board</dd>
+                    <dt><kbd>⌘</kbd> <kbd>Z</kbd> · <kbd>⌘</kbd> <kbd>⇧</kbd> <kbd>Z</kbd></dt><dd>undo · redo</dd>
+                </dl>
+                <p class="fine">Several selected items share one transform box, so
+                they move, scale, and rotate together.</p>
+
+                <h3>In the Folders drawer</h3>
+                <dl class="controls">
+                    <dt>Click · <kbd>⌘</kbd> / <kbd>Shift</kbd> + click</dt><dd>select thumbnails</dd>
+                    <dt>Drag · double-click</dt><dd>add them to the board</dd>
+                    <dt>Type chips (GIF, JPG, WEBM…)</dt><dd>hide or show that file type, in every folder</dd>
+                    <dt>Folder menu · <strong>+</strong></dt><dd>switch folders · link another</dd>
+                </dl>
+            </div>
+        </details>
     </section>
 
-    <section>
-        <div class="divider"><span>MotionRef Saver for Chrome and Firefox</span></div>
-        <p>A browser extension that collects references into the folder
-        MotionRef's drawer shows (<code>Downloads/MotionRef</code>, or any
-        subfolder you choose).</p>
+    <section id="setup">
+        <h2 class="divider">Setup</h2>
+        <ol class="steps">
+            <li><strong>Install the extension.</strong> Open the
+                <code>.zxp</code> with a ZXP installer
+                (<a href="https://aescripts.com/learn/zxp-installer/">aescripts
+                ZXP Installer</a> is free).</li>
+            <li><strong>Restart After Effects</strong> and open
+                <em>Window&nbsp;→&nbsp;Extensions&nbsp;→&nbsp;MotionRef</em>.</li>
+            <li><strong>Click the board once</strong> so the keyboard shortcuts
+                reach it. Until then After Effects keeps its own (Space still
+                previews your comp). Zooming and middle-drag panning work
+                either way.</li>
+        </ol>
+
+        <div class="callout" id="unverified">
+            <h3>Good to know</h3>
+            <p>The extension is signed with a self-signed certificate — your
+            ZXP installer may show an “unverified publisher” notice. That's
+            expected.</p>
+            <p>A file that's moved or renamed shows as a “Missing”
+            placeholder until it's back.</p>
+        </div>
+
+        <details>
+            <summary>Where MotionRef keeps its files</summary>
+            <div class="details-body">
+                <h3>Boards</h3>
+                <p class="fine">Boards are saved per project in this folder.</p>
+                <div class="path">
+                    <code id="path-boards">~/Library/Application Support/MotionRef/boards/</code>
+                    <button class="copy" type="button" data-copy="path-boards">Copy</button>
+                </div>
+                <h3>Previews</h3>
+                <p class="fine">Previews are cached here and rebuilt when the
+                source file changes; the original is never touched.</p>
+                <div class="path">
+                    <code id="path-cache">~/Library/Caches/MotionRef</code>
+                    <button class="copy" type="button" data-copy="path-cache">Copy</button>
+                </div>
+            </div>
+        </details>
+    </section>
+
+    <section id="saver">
+        <h2 class="divider">MotionRef Saver for Chrome and Firefox</h2>
+        <p class="lead">Optional. A browser extension that collects references
+        into the folder MotionRef's drawer shows
+        (<code>Downloads/MotionRef</code>, or any subfolder you choose).</p>
+        <div class="buttons saver-buttons" id="saver-buttons">
+            <a class="btn btn-secondary" id="dl-saver" href="https://github.com/tlatvys-ac/motionref-app/releases/latest/download/MotionRef-Saver-0.6.0.zip">
+                <svg class="btn-logo" viewBox="0 0 24 24" aria-hidden="true"><path fill="#4285F4" d="M12 0C8.21 0 4.831 1.757 2.632 4.501l3.953 6.848A5.454 5.454 0 0 1 12 6.545h10.691A12 12 0 0 0 12 0zM1.931 5.47A11.943 11.943 0 0 0 0 12c0 6.012 4.42 10.991 10.189 11.864l3.953-6.847a5.45 5.45 0 0 1-6.865-2.29zm13.342 2.166a5.446 5.446 0 0 1 1.45 7.09l.002.001h-.002l-5.344 9.257c.206.01.413.016.621.016 6.627 0 12-5.373 12-12 0-1.54-.29-3.011-.818-4.364zM12 16.364a4.364 4.364 0 1 1 0-8.728 4.364 4.364 0 0 1 0 8.728Z"/></svg>
+                <span class="btn-text">MotionRef Saver for Chrome
+                    <small>.zip · free · beta</small></span>
+            </a>
+            <a class="btn btn-secondary" id="dl-saver-firefox" href="https://github.com/tlatvys-ac/motionref-app/releases/latest/download/MotionRef-Saver-0.6.0.xpi">
+                <svg class="btn-logo" viewBox="0 0 24 24" aria-hidden="true"><path fill="#FF7139" d="M8.824 7.287c.008 0 .004 0 0 0zm-2.8-1.4c.006 0 .003 0 0 0zm16.754 2.161c-.505-1.215-1.53-2.528-2.333-2.943.654 1.283 1.033 2.57 1.177 3.53l.002.02c-1.314-3.278-3.544-4.6-5.366-7.477-.091-.147-.184-.292-.273-.446a3.545 3.545 0 01-.13-.24 2.118 2.118 0 01-.172-.46.03.03 0 00-.027-.03.038.038 0 00-.021 0l-.006.001a.037.037 0 00-.01.005L15.624 0c-2.585 1.515-3.657 4.168-3.932 5.856a6.197 6.197 0 00-2.305.587.297.297 0 00-.147.37c.057.162.24.24.396.17a5.622 5.622 0 012.008-.523l.067-.005a5.847 5.847 0 011.957.222l.095.03a5.816 5.816 0 01.616.228c.08.036.16.073.238.112l.107.055a5.835 5.835 0 01.368.211 5.953 5.953 0 012.034 2.104c-.62-.437-1.733-.868-2.803-.681 4.183 2.09 3.06 9.292-2.737 9.02a5.164 5.164 0 01-1.513-.292 4.42 4.42 0 01-.538-.232c-1.42-.735-2.593-2.121-2.74-3.806 0 0 .537-2 3.845-2 .357 0 1.38-.998 1.398-1.287-.005-.095-2.029-.9-2.817-1.677-.422-.416-.622-.616-.8-.767a3.47 3.47 0 00-.301-.227 5.388 5.388 0 01-.032-2.842c-1.195.544-2.124 1.403-2.8 2.163h-.006c-.46-.584-.428-2.51-.402-2.913-.006-.025-.343.176-.389.206-.406.29-.787.616-1.136.974-.397.403-.76.839-1.085 1.303a9.816 9.816 0 00-1.562 3.52c-.003.013-.11.487-.19 1.073-.013.09-.026.181-.037.272a7.8 7.8 0 00-.069.667l-.002.034-.023.387-.001.06C.386 18.795 5.593 24 12.016 24c5.752 0 10.527-4.176 11.463-9.661.02-.149.035-.298.052-.448.232-1.994-.025-4.09-.753-5.844z"/></svg>
+                <span class="btn-text">MotionRef Saver for Firefox
+                    <small>.xpi · signed by Mozilla · beta</small></span>
+            </a>
+        </div>
+
         <h3>On Instagram, Pinterest, Dribbble, and Behance</h3>
         <p>Hover a post's image and click <strong>Save</strong>, or just tap
         the site's own Save (Instagram's bookmark, or the Save button on
@@ -396,134 +728,162 @@
         looping GIF of it, or both. With both, the GIF goes in the folder and
         the video in its <code>Videos</code> subfolder; hide the WEBM chip in
         MotionRef to see only the GIFs.</p>
+
         <h3>Anywhere on the web</h3>
         <p>Right-click an image and choose <strong>Save Image to
         MotionRef</strong>.</p>
-        <h3>Installing in Firefox</h3>
-        <ol>
-            <li>Download <code>MotionRef-Saver.xpi</code> and open it in Firefox:
-                drag it onto a Firefox window, or choose
-                <em>File&nbsp;→&nbsp;Open&nbsp;File…</em>.</li>
-            <li>Click <strong>Add</strong>, then pin it from the puzzle-piece menu;
-                click its icon for the settings.</li>
-            <li>Save one image, then in MotionRef choose
-                <em>Folders&nbsp;→&nbsp;Link&nbsp;Folder…</em> and pick
-                <code>Downloads/MotionRef</code>.</li>
-        </ol>
-        <p class="fine">Signed by Mozilla, so it stays installed (Firefox 140 or
-        later). In Firefox the GIF is made in the Instagram tab after a video
-        is saved, so that tab is busy for a few seconds.</p>
-        <h3>Installing in Chrome</h3>
-        <ol>
-            <li>Unzip <code>MotionRef-Saver.zip</code> somewhere you'll keep it.</li>
-            <li>Open <code>chrome://extensions</code> and turn on
-                <strong>Developer mode</strong> (top right).</li>
-            <li>Click <strong>Load unpacked</strong> and choose the
-                <code>MotionRef Saver</code> folder. Pin it from the puzzle-piece
-                menu; click its icon for the settings (save folder, GIF size,
-                video or GIF).</li>
-            <li>Save one image, then in MotionRef choose
-                <em>Folders&nbsp;→&nbsp;Link&nbsp;Folder…</em> and pick
-                <code>Downloads/MotionRef</code>.</li>
-        </ol>
-        <p class="fine">Beta. It isn't in the Chrome Web Store, so Chrome
-        loads it in developer mode. The autosave reads the sites' English
-        labels and may need an update when a site changes its page. GIFs are
-        15 frames a second, up to 30 seconds. Behance's videos play in an
-        embedded player it can't reach, so it saves images and GIFs there.
-        It only runs on these four sites (and the image right-click menu); it
-        doesn't read other sites.</p>
+
+        <div id="saver-install">
+            <div id="install-firefox">
+                <h3>Installing in Firefox</h3>
+                <ol class="steps">
+                    <li><strong>Download <code>MotionRef-Saver.xpi</code> and open
+                        it in Firefox:</strong> drag it onto a Firefox window, or
+                        choose <em>File&nbsp;→&nbsp;Open&nbsp;File…</em>.</li>
+                    <li><strong>Click Add</strong>, then pin it from the
+                        puzzle-piece menu; click its icon for the settings.</li>
+                    <li><strong>Save one image</strong>, then in MotionRef choose
+                        <em>Folders&nbsp;→&nbsp;Link&nbsp;Folder…</em> and pick
+                        <code>Downloads/MotionRef</code>.</li>
+                </ol>
+                <p class="fine">Signed by Mozilla, so it stays installed (Firefox
+                140 or later). In Firefox the GIF is made in the Instagram tab
+                after a video is saved, so that tab is busy for a few seconds.</p>
+            </div>
+            <div id="install-chrome">
+                <h3>Installing in Chrome</h3>
+                <ol class="steps">
+                    <li><strong>Unzip <code>MotionRef-Saver.zip</code></strong>
+                        somewhere you'll keep it.</li>
+                    <li><strong>Open <code>chrome://extensions</code></strong> and
+                        turn on <strong>Developer mode</strong> (top right).</li>
+                    <li><strong>Click Load unpacked</strong> and choose the
+                        <code>MotionRef Saver</code> folder. Pin it from the
+                        puzzle-piece menu; click its icon for the settings (save
+                        folder, GIF size, video or GIF).</li>
+                    <li><strong>Save one image</strong>, then in MotionRef choose
+                        <em>Folders&nbsp;→&nbsp;Link&nbsp;Folder…</em> and pick
+                        <code>Downloads/MotionRef</code>.</li>
+                </ol>
+            </div>
+        </div>
+
+        <div class="callout">
+            <h3>It's a beta</h3>
+            <p>It isn't in the Chrome Web Store, so Chrome loads it in
+            developer mode. The autosave reads the sites' English labels and
+            may need an update when a site changes its page.</p>
+            <p>GIFs are 15 frames a second, up to 30 seconds. Behance's videos
+            play in an embedded player it can't reach, so it saves images and
+            GIFs there.</p>
+            <p>It only runs on these four sites (and the image right-click
+            menu); it doesn't read other sites.</p>
+        </div>
     </section>
 
     <section>
-        <div class="divider"><span>Setup</span></div>
-        <ol>
-            <li><strong>Install the extension</strong> — open the
-                <code>.zxp</code> with a ZXP installer
-                (<a href="https://aescripts.com/learn/zxp-installer/">aescripts
-                ZXP Installer</a> is free).</li>
-            <li>Restart After Effects and open
-                <em>Window&nbsp;→&nbsp;Extensions&nbsp;→&nbsp;MotionRef</em>.</li>
-            <li>Click the board once so the keyboard shortcuts reach it.
-                Until then After Effects keeps its own (Space still previews
-                your comp). Zooming and middle-drag panning work either way.</li>
-        </ol>
-        <p class="fine">Boards are saved per project in
-        <code>~/Library/Application Support/MotionRef/boards/</code>. A file
-        that's moved or renamed shows as a "Missing" placeholder until it's
-        back.</p>
-        <p class="fine">The extension is signed with a self-signed
-        certificate — your ZXP installer may show an "unverified publisher"
-        notice. That's expected.</p>
-    </section>
-
-    <section>
-        <div class="divider"><span>Requirements</span></div>
+        <h2 class="divider">Requirements</h2>
         <p class="fine">After Effects 2022 or later (developed and tested on
         AE 2026) on macOS. Previews rely on tools built into macOS, so
         Windows isn't supported. Everything runs locally — no accounts, no
         network calls.</p>
     </section>
+    </main>
 
     <footer>
-        MotionRef <span id="version">v1.2.0</span> ·
-        <a href="https://github.com/tlatvys-ac/motionref-app/releases">release notes</a> ·
-        made by Thomas Latvys ·
-        see also <a href="https://tlatvys-ac.github.io/anchor-buddy-app/">Anchor Buddy</a>,
-        <a href="https://tlatvys-ac.github.io/transporter-app/">Transporter</a>,
-        <a href="https://tlatvys-ac.github.io/aedoom-app/">AEDoom</a>,
-        and <a href="https://tlatvys-ac.github.io/fluidlab-app/">FluidLab</a>
+        <p><span class="nowrap">MotionRef <span id="version">v1.2.0</span></span><span class="sep">·</span> <a href="https://github.com/tlatvys-ac/motionref-app/releases">Release notes</a><span class="sep">·</span> <span class="nowrap">Made by Thomas Latvys</span></p>
+        <p>More tools:
+            <a href="https://tlatvys-ac.github.io/fluidlab-app/">FluidLab</a><span class="sep">·</span> <a href="https://tlatvys-ac.github.io/refractlab-app/">RefractLab</a><span class="sep">·</span> <a href="https://tlatvys-ac.github.io/anchor-buddy-app/">Anchor Buddy</a><span class="sep">·</span> <a href="https://tlatvys-ac.github.io/transporter-app/">Transporter</a><span class="sep">·</span> <a href="https://tlatvys-ac.github.io/aedoom-app/">AEDoom</a>
+        </p>
     </footer>
-
-    <div class="lightbox" id="lightbox" role="dialog" aria-label="Screenshot preview" aria-hidden="true">
-        <img id="lightbox-img" src="" alt="">
-    </div>
-
-    <script>
-    // Click a screenshot to preview it at full size; click anywhere
-    // (or press Escape) to close.
-    (() => {
-        const box = document.getElementById("lightbox");
-        const big = document.getElementById("lightbox-img");
-        document.querySelectorAll(".shots img").forEach((img) => {
-            img.addEventListener("click", () => {
-                big.src = img.src;
-                big.alt = img.alt;
-                box.classList.add("open");
-                box.setAttribute("aria-hidden", "false");
-            });
-        });
-        const close = () => {
-            box.classList.remove("open");
-            box.setAttribute("aria-hidden", "true");
-        };
-        box.addEventListener("click", close);
-        document.addEventListener("keydown", (e) => {
-            if (e.key === "Escape") close();
-        });
-    })();
-    </script>
-
-    <script>
-    // Keep the version and download link pointing at the latest release
-    // automatically; the hardcoded values above are the fallback.
-    fetch("https://api.github.com/repos/tlatvys-ac/motionref-app/releases/latest")
-        .then((r) => r.json())
-        .then((rel) => {
-            const v = (rel.tag_name || "").replace(/^v/, "");
-            if (v) document.getElementById("version").textContent = "v" + v;
-            const assets = rel.assets || [];
-            const link = (id, re) => {
-                const asset = assets.find((a) => re.test(a.name));
-                const el = document.getElementById(id);
-                if (asset && el) el.href = asset.browser_download_url;
-            };
-            link("dl-zxp", /\.zxp$/);
-            link("dl-saver", /^MotionRef-Saver.*\.zip$/);
-            link("dl-saver-firefox", /^MotionRef-Saver.*\.xpi$/);
-        })
-        .catch(() => {});
-    </script>
 </div>
+
+<div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Screenshot preview" hidden>
+    <img id="lightbox-img" src="" alt="">
+    <button class="lightbox-close" id="lightbox-close" type="button" aria-label="Close preview">×</button>
+</div>
+
+<script>
+// Click (or Enter/Space on) a screenshot to preview it at full size; click
+// anywhere, press Escape, or use the close button to close. Focus moves
+// into the preview and back to the screenshot that opened it.
+(() => {
+    const box = document.getElementById("lightbox");
+    const big = document.getElementById("lightbox-img");
+    const closeBtn = document.getElementById("lightbox-close");
+    let opener = null;
+    const open = (btn) => {
+        const img = btn.querySelector("img");
+        const src = img.currentSrc || img.src;
+        // Close-ups open the whole screenshot, in whichever format the browser picked.
+        big.src = btn.dataset.full ? btn.dataset.full + src.slice(src.lastIndexOf(".")) : src;
+        big.alt = img.alt;
+        opener = btn;
+        box.hidden = false;
+        document.body.style.overflow = "hidden";
+        closeBtn.focus();
+    };
+    const close = () => {
+        if (box.hidden) return;
+        box.hidden = true;
+        document.body.style.overflow = "";
+        if (opener) opener.focus();
+    };
+    document.querySelectorAll(".shot").forEach((btn) => btn.addEventListener("click", () => open(btn)));
+    box.addEventListener("click", close);
+    document.addEventListener("keydown", (e) => {
+        if (box.hidden) return;
+        if (e.key === "Escape") close();
+        if (e.key === "Tab") { e.preventDefault(); closeBtn.focus(); }
+    });
+})();
+
+// Copy a path.
+document.querySelectorAll(".copy").forEach((btn) => {
+    btn.addEventListener("click", () => {
+        const text = document.getElementById(btn.dataset.copy).textContent;
+        const done = () => {
+            btn.textContent = "Copied";
+            setTimeout(() => { btn.textContent = "Copy"; }, 1500);
+        };
+        if (navigator.clipboard) navigator.clipboard.writeText(text).then(done, () => {});
+    });
+});
+
+// MotionRef Saver: the visitor's browser gets its download (and its install
+// steps) first, and its button highlighted.
+(() => {
+    const ua = navigator.userAgent;
+    const browser = /Firefox\//.test(ua) ? "firefox" : /Chrome\//.test(ua) ? "chrome" : null;
+    if (!browser) return;
+    const row = document.getElementById("saver-buttons");
+    const btn = document.getElementById(browser === "firefox" ? "dl-saver-firefox" : "dl-saver");
+    const steps = document.getElementById("install-" + browser);
+    row.classList.add("has-match");
+    btn.classList.add("match");
+    row.insertBefore(btn, row.firstElementChild);
+    steps.parentNode.insertBefore(steps, steps.parentNode.firstElementChild);
+})();
+
+// Keep the version and download links pointing at the latest release
+// automatically; the hardcoded values above are the fallback if this
+// fetch fails.
+fetch("https://api.github.com/repos/tlatvys-ac/motionref-app/releases/latest")
+    .then((r) => r.json())
+    .then((rel) => {
+        const v = (rel.tag_name || "").replace(/^v/, "");
+        if (v) document.getElementById("version").textContent = "v" + v;
+        const assets = rel.assets || [];
+        const link = (id, re) => {
+            const asset = assets.find((a) => re.test(a.name));
+            const el = document.getElementById(id);
+            if (asset && el) el.href = asset.browser_download_url;
+        };
+        link("dl-zxp", /\.zxp$/);
+        link("dl-saver", /^MotionRef-Saver.*\.zip$/);
+        link("dl-saver-firefox", /^MotionRef-Saver.*\.xpi$/);
+    })
+    .catch(() => {});
+</script>
 </body>
 </html>
